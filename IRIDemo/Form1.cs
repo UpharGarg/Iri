@@ -104,6 +104,7 @@ namespace IRIDemo
 
         private async void button2_Click(object sender, EventArgs e)
         {
+            //added loader
             loader.Visible = true;
             loader.Dock = DockStyle.Fill;
             var productData = await _productRepo.GetAllAsync();
