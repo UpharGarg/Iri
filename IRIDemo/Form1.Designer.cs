@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.loader = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.loader)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -52,15 +55,28 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // loader
+            // 
+            this.loader.Image = ((System.Drawing.Image)(resources.GetObject("loader.Image")));
+            this.loader.Location = new System.Drawing.Point(347, 319);
+            this.loader.Name = "loader";
+            this.loader.Size = new System.Drawing.Size(123, 119);
+            this.loader.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.loader.TabIndex = 2;
+            this.loader.TabStop = false;
+            this.loader.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.loader);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "IRI Demo";
+            ((System.ComponentModel.ISupportInitialize)(this.loader)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -69,6 +85,7 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.PictureBox loader;
     }
 }
 
