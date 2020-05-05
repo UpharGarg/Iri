@@ -96,31 +96,42 @@ namespace IRIDemo
             }
         }
 
-        private async void button2_Click(object sender, EventArgs e)
+private async void button2_Click(object sender, EventArgs e)
         {
-            var productData = await _productRepo.GetAllAsync();
-            var productSalesData = await _productSalesRepo.GetAllAsync();
-            if (productData.Count() > 0 && productSalesData.Count() > 0)
+            try
             {
-                DialogResult dialogResult = MessageBox.Show("This will delete existing data before loading new dataset . Do you want to continue ?", "Confirm", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
+                var productData = await _productRepo.GetAllAsync();
+                var productSalesData = await _productSalesRepo.GetAllAsync();
+                if (productData != null && productData.Count() > 0 && productSalesData != null && productSalesData.Count() > 0)
                 {
-                    ClearDataFromTables();
-                    AddDataToTables();
-                    MessageBox.Show(string.Format("Data reload successful. Please click view results to view the output"));
+                    DialogResult dialogResult =
+                        MessageBox.Show(
+                            "This will delete existing data before loading new dataset . Do you want to continue ?",
+                            "Confirm", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        ClearDataFromTables();
+                        AddDataToTables();
+                        MessageBox.Show("Data reload successful. Please click view results to view the output");
+                    }
+                    else
+                    {
+                        //ToDo : Handle scenario where user declines to load data, probably give a warning about 
+                        // using stale data
+                        // this.Close();
+                    }
                 }
                 else
                 {
-                    //ToDo : Handle scenario where user declines to load data, probably give a warning about 
-                    // using stale data
-                    // this.Close();
+                    //load data if this is done very first time
+                    ClearDataFromTables();
+                    AddDataToTables();
+                    MessageBox.Show("Data reload successful. Please click view results to view the output");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                //load data if this is done very first time
-                ClearDataFromTables();
-                AddDataToTables();
+                MessageBox.Show($"Unexpected error encountered during processing {ex.Message}");
             }
 
         }
