@@ -4,19 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8D4AE203-A2AF-4CF8-A0D2-9E7BABB60581}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>IRIDemo</RootNamespace>
-    <AssemblyName>IRIDemo</AssemblyName>
+    <ProjectGuid>{510050B4-33CA-4F47-B0B5-3C213CE3747A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IRIDemo.Domain</RootNamespace>
+    <AssemblyName>IRIDemo.Domain</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -38,11 +34,7 @@
     <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.15.0.5\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleInjector, Version=4.10.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.4.10.2\lib\net45\SimpleInjector.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -59,72 +51,37 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="Domain\Base\Instance.cs" />
+    <Compile Include="Domain\Entities\AddDataToSqlTables.cs" />
+    <Compile Include="Domain\Entities\ClearDataFromSqlTables.cs" />
+    <Compile Include="Domain\Entities\LoadDataFromCsv.cs" />
+    <Compile Include="Domain\Entities\ProcessSqlData.cs" />
+    <Compile Include="Domain\Interface\IAddData.cs" />
+    <Compile Include="Domain\Interface\IClearData.cs" />
+    <Compile Include="Domain\Interface\ILoadData.cs" />
+    <Compile Include="Domain\Interface\IProcessData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\img\loader.gif" />
-  </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\IRIDemo.Common\IRIDemo.Common.csproj">
       <Project>{DD871950-FA4D-42A7-9D3A-962F4AE60D05}</Project>
       <Name>IRIDemo.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\IRIDemo.DataContext\IRIDemo.DataContext.csproj">
-      <Project>{ac504ac2-4c62-4c17-aa54-09b875118ba9}</Project>
+      <Project>{AC504AC2-4C62-4C17-AA54-09B875118BA9}</Project>
       <Name>IRIDemo.DataContext</Name>
     </ProjectReference>
-    <ProjectReference Include="..\IRIDemo.DataProcessing\IRIDemo.DataProcessing.csproj">
-      <Project>{77B32E49-479D-4598-8721-80696347936C}</Project>
-      <Name>IRIDemo.DataProcessing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\IRIDemo.Domain\IRIDemo.Domain.csproj">
-      <Project>{510050b4-33ca-4f47-b0b5-3c213ce3747a}</Project>
-      <Name>IRIDemo.Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\IRIDemo.Models\IRIDemo.Models.csproj">
-      <Project>{64d98a4f-5343-491a-a576-d05507a40c32}</Project>
+      <Project>{64D98A4F-5343-491A-A576-D05507A40C32}</Project>
       <Name>IRIDemo.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

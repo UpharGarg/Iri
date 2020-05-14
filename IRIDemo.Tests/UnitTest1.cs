@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using IRIDemo.ApplicationOperations.Implementation;
-using IRIDemo.ApplicationOperations.Interface;
-using IRIDemo.Model;
+using IRIDemo.Domain.Entities;
+using IRIDemo.Domain.Interface;
+using IRIDemo.Models.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IRIDemo.Tests

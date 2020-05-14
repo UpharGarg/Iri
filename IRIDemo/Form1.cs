@@ -1,18 +1,11 @@
-﻿using CsvHelper;
-using IRIDemo.ApplicationOperations.Interface;
-using IRIDemo.DataContext;
-using IRIDemo.Model;
-using IRIDemo.Repository;
+﻿using IRIDemo.Common.Helper;
+using IRIDemo.DataContext.Repository.Interface;
+using IRIDemo.DataProcessing.Interfaces;
+using IRIDemo.Models.Model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IRIDemo
@@ -25,136 +18,93 @@ namespace IRIDemo
         //Repositories for product and product sales data
         private readonly IGenericRepository<Product> _productRepo;
         private readonly IGenericRepository<ProductSales> _productSalesRepo;
-        //for inserting data into database
-        private readonly IAddData _addData;
-        // for loading data from csv file
-        private readonly ILoadData _loadData;
-        // clears exsiting data from database
-        private readonly IClearData _clearData;
-        // process data to generate required output/report
-        private readonly IProcessData _processData;
+        private IEnumerable<Product> _products;
+        private IEnumerable<ProductSales> _retailerSales;
+        private IShowResult _showResult;
+        private IAddDataInTable _addDataInTable;
+        private IClearDataFromTable _clearDataFromTable;
         public Form1(IGenericRepository<Product> productRepo, IGenericRepository<ProductSales> productSalesRepo,
-            IAddData addData, ILoadData loadData, IClearData clearData, IProcessData processData)
+            IShowResult showResult, IAddDataInTable addDataInTable, IClearDataFromTable clearDataFromTable)
         {
             _productRepo = productRepo;
             _productSalesRepo = productSalesRepo;
-            _addData = addData;
-            _loadData = loadData;
-            _clearData = clearData;
-            _processData = processData;
-
+            _showResult = showResult;
+            _addDataInTable = addDataInTable;
+            _clearDataFromTable = clearDataFromTable;
+            LoadDataInRepositoriesAsync();
             InitializeComponent();
 
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        private async void LoadDataInRepositoriesAsync()
         {
-            loader.Visible = true; 
-            loader.Dock = DockStyle.Fill;
-            try
-            {                
-                var productData = await _productRepo.GetAllAsync();
-                var productSalesData = await _productSalesRepo.GetAllAsync();
-                if (productData != null && productData.Count() > 0 && productSalesData != null && productSalesData.Count() > 0)
-                {
-                    //ToDo : this should be ideally taken as an input from user
-                    // Done this way to save some time, creating a folder on C Drive to save output 
-                    string folderName = @"C:\IRIDemo";
-                    Directory.CreateDirectory(folderName);
-                    string fileName = Path.Combine(folderName, "Output.txt");
-                    // generate the output
-                    GetResults(productData, productSalesData, fileName);
+            _products = await _productRepo.GetAllAsync();
+            _retailerSales = await _productSalesRepo.GetAllAsync();
+        }
 
+
+        private void ViewResults_Click(object sender, EventArgs e)
+        {
+            ShowLoader(); 
+            try
+            {
+                if (_products?.Count() > 0 && _retailerSales?.Count() > 0)
+                {
+                    string route = _showResult.GetResults(_products, _retailerSales, Helper.CreateDirectoryandFile());
+                    ShowMessageBox("Please check result at", route);
+                    HideLoader();
                 }
                 else
                 {
-                    MessageBox.Show("No data is available. Please click on load data first");
-                    loader.Visible = false;
+                    ShowMessageBox("No data is available. Please click on load data first" , string.Empty);
+                    HideLoader();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Unexpected error encountered during processing {ex.Message}");
-                loader.Visible = false;
+                ShowMessageBox("Unexpected error encountered during processing", ex.Message);
+                HideLoader();
             }
-            
-
-
-            
-
 
         }
 
-        private void GetResults(IEnumerable<Product> productData, IEnumerable<ProductSales> productSalesData, string path)
+       
+        private void LoadData_Click(object sender, EventArgs e)
         {
-            string route = @path;
-            FileStream fs = new FileStream(route, FileMode.Create, FileAccess.ReadWrite);
-            using (var sw = new StreamWriter(fs))
-            {
-                foreach (ResultType r in _processData.GetResults(productData, productSalesData))
-                {
-                    sw.WriteLine(string.Format("Prodcut Id : {0}  Product Name : {1}   CodeType : {2}  Code : {3} ",
-                        r.ProductId, r.ProductName, r.CodeType, r.Code));
-                }
-
-                MessageBox.Show(string.Format("Please check result at {0}", route));
-                loader.Visible = false;
-            }
-        }
-
-        private async void button2_Click(object sender, EventArgs e)
-        {
-            //added loader
-            loader.Visible = true;
-            loader.Dock = DockStyle.Fill;
-            var productData = await _productRepo.GetAllAsync();
-            var productSalesData = await _productSalesRepo.GetAllAsync();
-            if (productData.Count() > 0 && productSalesData.Count() > 0)
+            ShowLoader();
+            if (_products?.Count() > 0 && _retailerSales?.Count() > 0)
             {
                 DialogResult dialogResult = MessageBox.Show("This will delete existing data before loading new dataset . Do you want to continue ?", "Confirm", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    ClearDataFromTables();
-                    AddDataToTables();
-                    MessageBox.Show(string.Format("Data reload successful. Please click view results to view the output"));
+                    _clearDataFromTable.ClearDataFromTables(_productRepo, _productSalesRepo);
+                    _addDataInTable.AddDataToTables(_productRepo, _productSalesRepo);
+                    ShowMessageBox("Data reload successful. Please click view results to view the output" ,string.Empty);
                     loader.Visible = false;
                 }
                 else
-                {
-                    //ToDo : Handle scenario where user declines to load data, probably give a warning about 
-                    // using stale data
-                    // this.Close();
-                    loader.Visible = false;
-                }
+                    HideLoader();
             }
             else
             {
                 //load data if this is done very first time
-                ClearDataFromTables();
-                AddDataToTables();
-                loader.Visible = false;
+                _clearDataFromTable.ClearDataFromTables(_productRepo, _productSalesRepo);
+                _addDataInTable.AddDataToTables(_productRepo, _productSalesRepo);
+                HideLoader();
             }
 
         }
-        private void ClearDataFromTables()
-        {
-            _clearData.ClearDataFromTable(_productSalesRepo);
-            _clearData.ClearDataFromTable(_productRepo);
+        private void ShowLoader()
+        {   //added loader
+            loader.Visible = true;
+            loader.Dock = DockStyle.Fill;
         }
 
-        private IEnumerable<T> LoadProductRelatedDataFromCsv<T>() where T : class
+        private void HideLoader() { loader.Visible = false; }
+
+        private void ShowMessageBox( string message , string param)
         {
-
-            var productCsvData = _loadData.LoadTableFromCsv<T>();
-            return productCsvData;
+            MessageBox.Show($"{message} {param}");
         }
-        private void AddDataToTables()
-        {
-            _addData.AddDataToTable(_productRepo, LoadProductRelatedDataFromCsv<Product>());
-
-            _addData.AddDataToTable(_productSalesRepo, LoadProductRelatedDataFromCsv<ProductSales>());
-        }
-
-
     }
 }

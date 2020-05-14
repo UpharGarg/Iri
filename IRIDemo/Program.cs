@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using IRIDemo.ApplicationOperations.Implementation;
-using IRIDemo.ApplicationOperations.Interface;
-using IRIDemo.DataContext;
-using IRIDemo.Model;
-using IRIDemo.Repository;
-using IRIDemo.Repository.Implementation;
+﻿using IRIDemo.DataContext;
+using IRIDemo.DataContext.Repository.Implementation;
+using IRIDemo.DataContext.Repository.Interface;
+using IRIDemo.DataProcessing.Interfaces;
+using IRIDemo.DataProcessing.Implementation;
+using IRIDemo.Models.Model;
 using SimpleInjector;
-using SimpleInjector.Diagnostics;
-using SimpleInjector.Lifestyles;
+using System;
+using System.Windows.Forms;
 
 namespace IRIDemo
 {
@@ -39,10 +34,10 @@ namespace IRIDemo
             //container.Register(typeof(IRepository<>), assemblies);
             container.Register<IGenericRepository<Product>, GenericRepository<Product>>(Lifestyle.Singleton);
             container.Register<IGenericRepository<ProductSales>, GenericRepository<ProductSales>>(Lifestyle.Singleton);
-            container.Register<IAddData, AddDataToSqlTables>(Lifestyle.Singleton);
-            container.Register<ILoadData, LoadDataFromCsv>(Lifestyle.Singleton);
-            container.Register<IClearData, ClearDataFromSqlTables>(Lifestyle.Singleton);
-            container.Register<IProcessData, ProcessSqlData>(Lifestyle.Singleton);
+            container.Register<IShowResult, ShowResults>(Lifestyle.Singleton);
+            container.Register<IAddDataInTable, IAddDataInTable>(Lifestyle.Singleton);
+            container.Register<ILoadDataFromSource, LoadDataFromSource>(Lifestyle.Singleton);
+            container.Register<IClearDataFromTable, ClearDataFromTable>(Lifestyle.Singleton);
             container.Register<Form1>(Lifestyle.Singleton); ;
             container.Register<ProductDetailsContext>(Lifestyle.Singleton);
             // Optionally verify the container.

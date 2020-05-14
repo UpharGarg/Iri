@@ -57,6 +57,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IRIDemo.Domain\IRIDemo.Domain.csproj">
+      <Project>{510050B4-33CA-4F47-B0B5-3C213CE3747A}</Project>
+      <Name>IRIDemo.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IRIDemo.Models\IRIDemo.Models.csproj">
+      <Project>{64D98A4F-5343-491A-A576-D05507A40C32}</Project>
+      <Name>IRIDemo.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IRIDemo\IRIDemo.csproj">
       <Project>{8d4ae203-a2af-4cf8-a0d2-9e7babb60581}</Project>
       <Name>IRIDemo</Name>
