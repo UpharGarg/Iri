@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace IRIDemo.Models.Model
 {
     public class ProductSales
-    {
-        [Key]
+    { 
         public int Id { get; set; }
         public int ProductId { get; set; }
 
